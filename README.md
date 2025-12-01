@@ -69,7 +69,7 @@ Expected:
 ### Static File Test
 Create:
 
-    static/hello.txt
+    echo "hello world" > static/hello.txt
 
 Test:
 
