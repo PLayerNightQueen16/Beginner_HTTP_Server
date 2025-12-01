@@ -59,6 +59,7 @@ Expected:
     curl -i http://localhost:8080/notfound
 
 ## ✨ Bonus Features
+
 ### DELETE /data/<id>
     curl -i -X DELETE http://localhost:8080/data/1
 
@@ -67,18 +68,22 @@ Expected:
 
 ### Static File Test
 Create:
+
     static/hello.txt
 
 Test:
+
     curl -i http://localhost:8080/static/hello.txt
 
-Expected Result: 
+Expected Result:
+
     HTTP/1.1 200 OK
     <headers...>
 
     hello world
 
 ## 🧠 Architecture & Design
+
 ### Manual HTTP Parsing
 - Reads raw TCP bytes
 - Detects header termination (`\r\n\r\n`)
