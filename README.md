@@ -112,25 +112,27 @@ These tests verify concurrency and the safety of the in-memory data store.
 
 > **Note:** Run server in one terminal and tests in another.
 
-**Quick Smoke Test — 50 Parallel GET Requests**
-```
-seq 1 50 | xargs -n1 -P20 -I{} \
-curl -s -o /dev/null -w "%{http_code} " "http://localhost:8080/"
-echo
-```
-
-Expected: 
-A sequence of `200` codes — one per request.
-
-
 **200 Parallel GET Requests**
+
+Test:
 ```
 seq 1 200 | xargs -n1 -P50 -I{} \
 curl -s -o /dev/null -w "%{http_code} " "http://localhost:8080/"
 echo
 ```
 
+Expected: 
+A sequence of `200` codes — one per request.
+```
+200 200 200 200 200 200 200 200 200 200
+200 200 200 200 200 200 200 200 200 200
+...
+(repeated until 200 entries)
+```
+
 **Concurrent POST Requests (Thread-Safe Data Store)**
+
+Test:
 ```
 seq 1 50 | xargs -n1 -P20 -I{} \
 curl -s -X POST http://localhost:8080/data \
