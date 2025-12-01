@@ -1,25 +1,4 @@
 #!/usr/bin/env python3
-"""
-HTTP/1.1 server from scratch (no high-level HTTP frameworks).
-Features:
-- Parse request line, headers, body (Content-Length)
-- Support GET, POST, PUT, DELETE (GET+POST required; extra: PUT/DELETE)
-- Required endpoints:
-    GET / -> welcome
-    GET /echo?message=<text>
-    POST /data -> accept JSON, store in-memory, return success
-    GET /data -> return all stored data as JSON
-    GET /data/:id -> return item by id
-- Proper HTTP response formatting (status line, headers Date Content-Type Content-Length)
-- Handles status codes: 200, 400, 404, 500
-Bonus implemented:
-- Threaded concurrent request handling
-- Static file serving from ./static at /static/<path>
-- Request logging
-- CORS headers support
-- Request body size limit (configurable)
-- Keep-alive connections (basic)
-"""
 
 import socket
 import threading
@@ -174,10 +153,6 @@ def handle_get_data(method, path, query, headers, body, path_parts):
             json.dumps({'error': 'Method Not Allowed'}).encode()
         )
 
-    # path_parts example:
-    # '/data'     -> ['data']
-    # '/data/1'   -> ['data', '1']
-
     # If /data/<id>
     if len(path_parts) == 2 and path_parts[0] == 'data':
         try:
@@ -303,7 +278,7 @@ def handle_client(conn, addr):
         keep_alive_requests = 0
 
         while True:
-            # --- READ REQUEST ---
+            # Read request
             try:
                 request_line, headers, body = recv_request(conn)
 
@@ -334,7 +309,7 @@ def handle_client(conn, addr):
                     pass
                 break
 
-            # --- PARSE REQUEST LINE ---
+            # Parse Request
             try:
                 parts = request_line.split()
                 method   = parts[0].upper()
@@ -348,10 +323,10 @@ def handle_client(conn, addr):
                     pass
                 break
 
-            # --- LOG REQUEST (only after parse succeeded) ---
+            # Log request
             log(f"{addr} \"{method} {path} {version}\" Headers:{len(headers)} BodyLen:{len(body)}")
 
-            # --- HANDLE OPTIONS (CORS preflight) ---
+            # Handle Options
             if method == 'OPTIONS':
                 resp = build_response(
                     204, 'No Content',
@@ -363,7 +338,7 @@ def handle_client(conn, addr):
                 except Exception:
                     pass
             else:
-                # --- DISPATCH ROUTE ---
+                # Dispatch Route
                 try:
                     resp = dispatch_request(method, path, headers, body)
                 except Exception as e:
@@ -379,7 +354,7 @@ def handle_client(conn, addr):
                     # other send errors -> close connection
                     break
 
-            # --- KEEP-ALIVE LOGIC ---
+            # Keep-Alive
             connection_header = headers.get('Connection', '').lower()
             keep_alive = True
 
