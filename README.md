@@ -99,6 +99,13 @@ curl -i -X OPTIONS http://localhost:8080/data \
   -H "Access-Control-Request-Headers: Content-Type"
 ```
 
+Expected:
+- HTTP/1.1 204 No Content
+- Access-Control-Allow-origin: *
+- Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+- Access-Control-Allow-Headers: Content-Ty Authorization
+
+
 ## Threading / Concurrency Tests
 This server uses a thread-per-connection model (`threading.Thread`).
 These tests verify concurrency and the safety of the in-memory data store.
@@ -141,12 +148,6 @@ Expected:
 ```
 50
 ```
-
-Expected:
-- HTTP/1.1 204 No Content
-- Access-Control-Allow-origin: *
-- Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
-- Access-Control-Allow-Headers: Content-Ty Authorization
 
 ## 🧠 Architecture & Design
 
