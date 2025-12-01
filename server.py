@@ -168,36 +168,70 @@ def handle_post_data(method, path, query, headers, body):
 def handle_get_data(method, path, query, headers, body, path_parts):
     # GET /data  OR GET /data/:id
     if method != 'GET':
-        return build_response(405, 'Method Not Allowed', {'Content-Type': 'application/json'}, json.dumps({'error':'Method Not Allowed'}).encode())
+        return build_response(
+            405, 'Method Not Allowed',
+            {'Content-Type': 'application/json'},
+            json.dumps({'error': 'Method Not Allowed'}).encode()
+        )
+
+    # path_parts example:
+    # '/data'     -> ['data']
+    # '/data/1'   -> ['data', '1']
+
     # If /data/<id>
-    if len(path_parts) >= 3 and path_parts[1] == 'data' and path_parts[2]:
+    if len(path_parts) == 2 and path_parts[0] == 'data':
         try:
-            item_id = int(path_parts[2])
-        except:
+            item_id = int(path_parts[1])
+        except Exception:
             return response_400('Invalid id')
+
         with data_lock:
             for item in data_store:
                 if item['id'] == item_id:
-                    return build_response(200, 'OK', {'Content-Type': 'application/json; charset=utf-8'}, json.dumps(item).encode('utf-8'))
+                    return build_response(
+                        200, 'OK',
+                        {'Content-Type': 'application/json; charset=utf-8'},
+                        json.dumps(item).encode('utf-8')
+                    )
+
         return response_404('Item not found')
-    # else return all
+
+    # Else return all
     with data_lock:
-        return build_response(200, 'OK', {'Content-Type': 'application/json; charset=utf-8'}, json.dumps(data_store).encode('utf-8'))
+        return build_response(
+            200, 'OK',
+            {'Content-Type': 'application/json; charset=utf-8'},
+            json.dumps(data_store).encode('utf-8')
+        )
+
 
 def handle_delete_data(method, path, query, headers, body, path_parts):
     if method != 'DELETE':
-        return build_response(405, 'Method Not Allowed', {'Content-Type': 'application/json'}, json.dumps({'error':'Method Not Allowed'}).encode())
-    if len(path_parts) >= 3 and path_parts[1] == 'data' and path_parts[2]:
+        return build_response(
+            405, 'Method Not Allowed',
+            {'Content-Type': 'application/json'},
+            json.dumps({'error': 'Method Not Allowed'}).encode()
+        )
+
+    # If /data/<id>
+    if len(path_parts) == 2 and path_parts[0] == 'data':
         try:
-            item_id = int(path_parts[2])
-        except:
+            item_id = int(path_parts[1])
+        except Exception:
             return response_400('Invalid id')
+
         with data_lock:
             for i, item in enumerate(data_store):
                 if item['id'] == item_id:
                     data_store.pop(i)
-                    return build_response(200, 'OK', {'Content-Type': 'application/json; charset=utf-8'}, json.dumps({'status':'deleted'}).encode('utf-8'))
+                    return build_response(
+                        200, 'OK',
+                        {'Content-Type': 'application/json; charset=utf-8'},
+                        json.dumps({'status': 'deleted'}).encode('utf-8')
+                    )
+
         return response_404('Item not found')
+
     return response_400('No id provided')
 
 def handle_static(method, subpath):
