@@ -22,10 +22,55 @@ This project is a fully functional **HTTP/1.1 server built from scratch** using 
 - Request body size limit (5MB)
 
 ## 📁 Project Structure
-.
-├── server.py
-├── README.md
-└── static/
+    .
+    ├── server.py
+    ├── README.md
+    └── static/
+
+## 🏃‍♂️ Running the Server
+    python3 server.py
+
+Server runs at:
+    http://localhost:8080/
+
+## 🧪 Testing the Server
+
+### GET /
+    curl -i http://localhost:8080/
+
+### GET /echo
+    curl -i "http://localhost:8080/echo?message=hello"
+
+Expected:
+    {"message":"hello"}
+
+### POST /data
+    curl -i -X POST http://localhost:8080/data \
+      -H "Content-Type: application/json" \
+      -d '{"name":"test","value":1}'
+
+### GET /data
+    curl -i http://localhost:8080/data
+
+### GET /data/<id>
+    curl -i http://localhost:8080/data/1
+
+### DELETE /data/<id>
+    curl -i -X DELETE http://localhost:8080/data/1
+
+Expected:
+    {"status":"deleted"}
+
+### Static File Test
+Create:
+    static/hello.txt
+
+Test:
+    curl -i http://localhost:8080/static/hello.txt
+
+### 404 Test
+    curl -i http://localhost:8080/notfound
+
 
 ## 🧠 Architecture & Design
 ### Manual HTTP Parsing
