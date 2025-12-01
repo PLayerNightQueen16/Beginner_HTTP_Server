@@ -55,8 +55,11 @@ Expected:
 ### GET /data/<id>
     curl -i http://localhost:8080/data/1
 
-### 404 Test
-    curl -i http://localhost:8080/notfound
+### DELETE /data/<id>
+    curl -i -X DELETE http://localhost:8080/data/1
+
+Expected:
+    {"status":"deleted"}
 
 ### Static File Test
 Create:
@@ -66,47 +69,9 @@ Test:
 
     curl -i http://localhost:8080/static/hello.txt
 
-### DELETE /data/<id>
-    curl -i -X DELETE http://localhost:8080/data/1
+### 404 Test
+    curl -i http://localhost:8080/notfound
 
-Expected:
-    {"status":"deleted"}
-
-
-## 🧵 Threading / Concurrency (how to test & expected results)
-
-This server uses a **thread-per-connection** model (one `threading.Thread` per accepted socket). The following commands help you validate that threading works and that the in-memory `data_store` is safe under concurrent writes.
-
-> Run the server in one terminal, and run the tests below in another terminal.
-
-### Quick smoke test (many parallel GETs)
-Runs 50 requests with 20 workers in parallel:
-    seq 1 50 | xargs -n1 -P20 -I{} curl -s -o /dev/null -w "%{http_code} " "http://localhost:8080/"
-    echo
-
-Expected: a sequence of 200 status codes (one per request).
-
-# 🌐 CORS (Cross-Origin Resource Sharing) — tests & expected behavior
-
-This server sets permissive CORS headers on responses:
-
-```http
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
-Access-Control-Allow-Headers: Content-Type, Authorization
-
-Simulate a browser preflight:
-
-    curl -i -X OPTIONS http://localhost:8080/data \
-        -H "Origin: http://example.com" \
-        -H "Access-Control-Request-Method: POST" \
-        -H "Access-Control-Request-Headers: Content-Type"
-
-Expected:
-- HTTP/1.1 204 No Content
-- Access-Control-Allow-Origin: *
-- Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
-- Access-Control-Allow-Headers: Content-Type, Authorization
 
 ## 🧠 Architecture & Design
 ### Manual HTTP Parsing
