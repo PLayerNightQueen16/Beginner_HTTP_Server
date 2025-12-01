@@ -82,6 +82,29 @@ Expected Result:
 
     hello world
 
+### CORS (Cross-Origin Resource Sharing) 
+This server sets permissive CORS headers on responses:
+
+  ```
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+  Access-Control-Allow-Headers: Content-Type, Authorization
+  ```
+
+Quick preflight test (curl OPTIONS) - Simulate a browser preflight:
+```
+curl -i -X OPTIONS http://localhost:8080/data \
+  -H "Origin: http://example.com" \
+  -H "Access-Control-Request-Method: POST" \
+  -H "Access-Control-Request-Headers: Content-Type"
+```
+
+Expected:
+- HTTP/1.1 204 No Content
+- Access-Control-Allow-origin: *
+- Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+- Access-Control-Allow-Headers: Content-Ty Authorization
+
 ## 🧠 Architecture & Design
 
 ### Manual HTTP Parsing
