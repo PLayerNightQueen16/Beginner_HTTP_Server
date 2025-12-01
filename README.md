@@ -106,7 +106,7 @@ Expected:
 - Access-Control-Allow-Headers: Content-Ty Authorization
 
 
-## Threading / Concurrency Tests
+### Threading / Concurrency Tests
 This server uses a thread-per-connection model (`threading.Thread`).
 These tests verify concurrency and the safety of the in-memory data store.
 
