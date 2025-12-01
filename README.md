@@ -66,6 +66,7 @@ Create:
     static/hello.txt
 
 Test:
+
     curl -i http://localhost:8080/static/hello.txt
 
 ### 404 Test
