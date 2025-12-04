@@ -1,6 +1,8 @@
 # Minimal HTTP/1.1 Server (Python Sockets)
 This project is a fully functional **HTTP/1.1 server built from scratch** using only Python’s standard library (`socket`, `threading`, etc.). No web frameworks and no high-level HTTP libraries were used.
 
+---
+
 ## 🚀 Features Implemented
 ### Core Requirements
 - Manual HTTP parsing (request line, headers, body)
@@ -13,6 +15,8 @@ This project is a fully functional **HTTP/1.1 server built from scratch** using 
   - `GET /data/<id>` — Return item by ID
 - Proper HTTP/1.1 responses (status line, headers, body)
 
+---
+
 ### Bonus Features
 - Multi-threaded client handling
 - Static file server (`/static/<filename>`)
@@ -20,6 +24,8 @@ This project is a fully functional **HTTP/1.1 server built from scratch** using 
 - Keep-alive timeout handling
 - Request logging
 - Request body size limit (5MB)
+
+---
 
 ## 📁 Project Structure
 ```pgsql
@@ -29,81 +35,101 @@ This project is a fully functional **HTTP/1.1 server built from scratch** using 
     └── static/
 ```
 
+---
+
 ## 🏃‍♂️ Running the Server
 ```bash
     python3 server.py
 ```
 Server runs at:
 ```arduino
-    http://localhost:8080/
+http://localhost:8080/
 ```
+
+---
 
 ## 🧪 Testing the Server
 
 ### GET /
 ```bash
-    curl -i http://localhost:8080/
+curl -i http://localhost:8080/
 ```
 
 ### GET /echo
 ```bash
-    curl -i "http://localhost:8080/echo?message=hello"
+curl -i "http://localhost:8080/echo?message=hello"
 ```
 
 Expected:
-```
-    {"message":"hello"}
+```json
+{"message":"hello"}
 ```
 
 ### POST /data
-    curl -i -X POST http://localhost:8080/data \
-      -H "Content-Type: application/json" \
-      -d '{"name":"test","value":1}'
+```bash
+curl -i -X POST http://localhost:8080/data \
+  -H "Content-Type: application/json" \
+  -d '{"name":"test","value":1}'
+```
 
 ### GET /data
-    curl -i http://localhost:8080/data
+```bash
+curl -i http://localhost:8080/data
+```
 
 ### GET /data/<id>
-    curl -i http://localhost:8080/data/1
+```bash
+curl -i http://localhost:8080/data/1
+```
 
 ### 404 Test
-    curl -i http://localhost:8080/notfound
+```bash
+curl -i http://localhost:8080/notfound
+```
+---
 
 ## ✨ Bonus Features
 
 ### DELETE /data/<id>
-    curl -i -X DELETE http://localhost:8080/data/1
+```bash
+curl -i -X DELETE http://localhost:8080/data/1
+```
 
 Expected:
-    {"status":"deleted"}
+```json
+{"status":"deleted"}
+```
 
 ### Static File Test
 Create:
-
-    echo "hello world" > static/hello.txt
+```arduino
+echo "hello world" > static/hello.txt
+```
 
 Test:
-
-    curl -i http://localhost:8080/static/hello.txt
+```bash
+curl -i http://localhost:8080/static/hello.txt
+```
 
 Expected Result:
+```bash
+HTTP/1.1 200 OK
+<headers...>
 
-    HTTP/1.1 200 OK
-    <headers...>
-
-    hello world
+hello world
+```
 
 ### CORS (Cross-Origin Resource Sharing) 
 This server sets permissive CORS headers on responses:
 
-  ```
+  ```http
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
   Access-Control-Allow-Headers: Content-Type, Authorization
   ```
 
 **Quick preflight test (curl OPTIONS) - Simulate a browser preflight:**
-```
+```bash
 curl -i -X OPTIONS http://localhost:8080/data \
   -H "Origin: http://example.com" \
   -H "Access-Control-Request-Method: POST" \
@@ -126,7 +152,7 @@ These tests verify concurrency and the safety of the in-memory data store.
 **200 Parallel GET Requests**
 
 Test:
-```
+```bash
 seq 1 200 | xargs -n1 -P50 -I{} \
 curl -s -o /dev/null -w "%{http_code} " "http://localhost:8080/"
 echo
@@ -134,7 +160,7 @@ echo
 
 Expected: 
 A sequence of `200` codes — one per request.
-```
+```bash
 200 200 200 200 200 200 200 200 200 200
 200 200 200 200 200 200 200 200 200 200
 ...
@@ -144,7 +170,7 @@ A sequence of `200` codes — one per request.
 **Concurrent POST Requests (Thread-Safe Data Store)**
 
 Test:
-```
+```bash
 seq 1 50 | xargs -n1 -P20 -I{} \
 curl -s -X POST http://localhost:8080/data \
   -H "Content-Type: application/json" \
@@ -153,7 +179,7 @@ curl -s -X POST http://localhost:8080/data \
 
 Then verify the count:
 
-```
+```bash
 curl -s http://localhost:8080/data | jq 'length'
 ```
 
@@ -161,6 +187,8 @@ Expected:
 ```
 50
 ```
+
+---
 
 ## 🧠 Architecture & Design
 
@@ -193,11 +221,15 @@ Each POST creates an auto-incremented item.
 | 405 | Method not allowed |
 | 500 | Internal server error |
 
+---
+
 ## 📌 Limitations
 - No HTTPS/TLS
 - No database (in-memory only)
 - Threading not ideal for massive concurrency
 - No chunked encoding
+
+---
 
 ## ✔ Assignment Coverage
 | Requirement | Status |
@@ -215,6 +247,8 @@ Each POST creates an auto-incremented item.
 | Static files | ⭐ |
 | CORS | ⭐ |
 | DELETE | ⭐ |
+
+---
 
 ## 📜 License
 Free to use for learning and academic purposes.
