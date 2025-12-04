@@ -22,27 +22,38 @@ This project is a fully functional **HTTP/1.1 server built from scratch** using 
 - Request body size limit (5MB)
 
 ## 📁 Project Structure
+```pgsql
     .
     ├── server.py
     ├── README.md
     └── static/
+```
 
 ## 🏃‍♂️ Running the Server
+```bash
     python3 server.py
-
+```
 Server runs at:
+```arduino
     http://localhost:8080/
+```
 
 ## 🧪 Testing the Server
 
 ### GET /
+```bash
     curl -i http://localhost:8080/
+```
 
 ### GET /echo
+```bash
     curl -i "http://localhost:8080/echo?message=hello"
+```
 
 Expected:
+```
     {"message":"hello"}
+```
 
 ### POST /data
     curl -i -X POST http://localhost:8080/data \
