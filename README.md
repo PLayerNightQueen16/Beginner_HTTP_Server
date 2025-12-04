@@ -39,7 +39,7 @@ This project is a fully functional **HTTP/1.1 server built from scratch** using 
 
 ## 🏃‍♂️ Running the Server
 ```bash
-    python3 server.py
+python3 server.py
 ```
 Server runs at:
 ```arduino
@@ -213,6 +213,8 @@ Each POST creates an auto-incremented item.
 - Each client connection handled on a new thread
 - Simple, meets assignment needs
 
+---
+
 ## 🛠 Error Handling
 | Code | Meaning |
 |------|---------|
@@ -220,6 +222,7 @@ Each POST creates an auto-incremented item.
 | 404 | Route not found |
 | 405 | Method not allowed |
 | 500 | Internal server error |
+
 
 ---
 
